@@ -51,21 +51,21 @@ namespace ControleDeEstacionamento.Controllers
         [HttpPost("")]
         public async Task<IActionResult> PostUserAsync(
             [FromServices] ParkingDbContext context,
-            [FromBody] UserModel user)
+            [FromBody] UserModel model)
         {
             try
             {
-                var company = context.Companies.FirstOrDefault(x => x.Id == user.CompanyId);
+                var company = context.Companies.FirstOrDefault(x => x.Id == model.CompanyId);
                 if (company == null)
                     return NotFound("Nenhuma empresa encontrada com o Id informado");
 
                 var newUser = new User
                 {
-                    Name = user.Name,
-                    Username = user.Username,
-                    PasswordHash = user.PasswordHash,
+                    Name = model.Name,
+                    Username = model.Username,
+                    PasswordHash = model.PasswordHash,
                     Role = UserRole.VehicleRegister,
-                    CompanyId = user.CompanyId,
+                    CompanyId = model.CompanyId,
                     IsActive = true
 
                 };

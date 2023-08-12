@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿
 
 namespace ControleDeEstacionamento.Models
 {
@@ -9,7 +9,6 @@ namespace ControleDeEstacionamento.Models
         public string Username { get; set; }
         public string PasswordHash { get; set; }
         public UserRole Role { get; set; }
-
         public bool IsActive { get; set; }
         public  Company Company { get; set; }
         public int CompanyId { get; set; }

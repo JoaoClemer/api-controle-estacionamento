@@ -1,5 +1,6 @@
 ﻿using ControleDeEstacionamento.Data;
 using ControleDeEstacionamento.Models;
+using ControleDeEstacionamento.ModelView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var parkings = await context.Parkings.ToListAsync();
+                var parkings = await context.Parkings.AsNoTracking().Include(x=> x.Company).Include(x=> x.Vehicles).ToListAsync();
                 if (parkings.Count == 0)
                     return NotFound("Não temos parkings registrados");
 
@@ -34,7 +35,7 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var parking = await context.Parkings.FirstOrDefaultAsync(x => x.Id == id);
+                var parking = await context.Parkings.AsNoTracking().Include(x => x.Company).Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id);
                 if (parking == null)
                     return NotFound("Parking não encontrado");
 
@@ -48,14 +49,18 @@ namespace ControleDeEstacionamento.Controllers
         [HttpPost("")]
         public async Task<IActionResult> PostParkingAsync(
             [FromServices] ParkingDbContext context,
-            [FromBody] Parking parking)
+            [FromBody] ParkingModel model)
         {
             try
             {
+                var company = context.Companies.FirstOrDefault(x => x.Id == model.CompanyId);
+                if (company == null)
+                    return NotFound("Nenhuma empresa encontrada com o Id informado");
+
                 var newParking = new Parking
                 {
-                    Id = 0,
-                    TotalParkingSpots = parking.TotalParkingSpots
+                    TotalParkingSpots = model.TotalParkingSpots,
+                    CompanyId = company.Id
                 };
                 await context.Parkings.AddAsync(newParking);
                 await context.SaveChangesAsync();
@@ -72,7 +77,7 @@ namespace ControleDeEstacionamento.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutParkingAsync(
             [FromServices] ParkingDbContext context,
-            [FromBody] Parking parking,
+            [FromBody] ParkingModel model,
             [FromRoute] int id)
         {
             try
@@ -81,7 +86,7 @@ namespace ControleDeEstacionamento.Controllers
                 if (parkings == null)
                     return NotFound("Parking não encontrado");
 
-                parkings.TotalParkingSpots = parking.TotalParkingSpots;
+                parkings.TotalParkingSpots = model.TotalParkingSpots;
 
                 context.Parkings.Update(parkings);
                 await context.SaveChangesAsync();

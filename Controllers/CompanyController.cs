@@ -15,7 +15,7 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var companies = await context.Companies.ToListAsync();
+                var companies = await context.Companies.AsNoTracking().Include(x=> x.Users).Include(x=>x.Parkings).ToListAsync();
                 if(companies.Count == 0)
                     return NotFound("Não temos empresas cadastradas");
 
