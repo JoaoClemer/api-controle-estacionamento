@@ -4,6 +4,8 @@ E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\C
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\ControleDeEstacionamento.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\ControleDeEstacionamento.pdb
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Humanizer.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.Data.Sqlite.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
@@ -13,9 +15,15 @@ E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\M
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.OpenApi.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Newtonsoft.Json.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\SQLitePCLRaw.batteries_v2.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\SQLitePCLRaw.core.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\SQLitePCLRaw.provider.e_sqlite3.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\runtimes\alpine-arm\native\libe_sqlite3.so
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\runtimes\alpine-arm64\native\libe_sqlite3.so
@@ -44,6 +52,7 @@ E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\C
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.AssemblyInfoInputs.cache
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.AssemblyInfo.cs
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.csproj.CoreCompileInputs.cache
+E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.MvcApplicationPartsAssemblyInfo.cs
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.MvcApplicationPartsAssemblyInfo.cache
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\staticwebassets.build.json
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\staticwebassets.development.json
@@ -54,8 +63,3 @@ E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\r
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.pdb
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.genruntimeconfig.cache
 E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ref\ControleDeEstacionamento.dll
-E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Microsoft.OpenApi.dll
-E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
-E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-E:\Programação\DOTNET Balta\AspNet\ControleDeEstacionamento\obj\Debug\net6.0\ControleDeEstacionamento.MvcApplicationPartsAssemblyInfo.cs

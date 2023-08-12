@@ -1,5 +1,6 @@
 ﻿using ControleDeEstacionamento.Data;
 using ControleDeEstacionamento.Models;
+using ControleDeEstacionamento.ModelView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,18 +50,14 @@ namespace ControleDeEstacionamento.Controllers
         [HttpPost("")]
         public async Task<IActionResult> PostCompanyAsync(
             [FromServices]ParkingDbContext context,
-            [FromBody] Company company)
+            [FromBody] CompanyModel model)
         {
             try
             {
                 var newCompany = new Company
                 {
-                    Id = company.Id,
-                    Name = company.Name,
-                    Country = company.Country,
-                    Users = null,
-                    Parkings = null,
-
+                    Name = model.Name,
+                    Country = model.Country,
                 };
                 await context.Companies.AddAsync(newCompany);
                 await context.SaveChangesAsync();

@@ -16,7 +16,8 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var users = await context.Users.ToListAsync();
+                
+                var users = await context.Users.AsNoTracking().Include(x => x.Company).ToListAsync();
 
                 if(users.Count == 0)
                     return NotFound("Não temos usuários registrados");  
@@ -54,12 +55,17 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
+                var company = context.Companies.FirstOrDefault(x => x.Id == user.CompanyId);
+                if (company == null)
+                    return NotFound("Nenhuma empresa encontrada com o Id informado");
+
                 var newUser = new User
                 {
                     Name = user.Name,
                     Username = user.Username,
                     PasswordHash = user.PasswordHash,
                     Role = UserRole.VehicleRegister,
+                    CompanyId = user.CompanyId,
                     IsActive = true
 
                 };

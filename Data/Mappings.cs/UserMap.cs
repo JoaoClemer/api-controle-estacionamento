@@ -9,8 +9,6 @@ namespace ControleDeEstacionamento.Data.Mappings.cs
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(x => x.Id);
-            //builder.Property(x => x.Id)
-            //    .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name)
                 .IsRequired()
@@ -29,10 +27,10 @@ namespace ControleDeEstacionamento.Data.Mappings.cs
             builder.Property(x => x.IsActive)
                 .IsRequired();
 
-            //builder.HasOne(x => x.Company)
-            //    .WithMany(x => x.Users)
-            //    .HasForeignKey(x=> x.CompanyId);
+            builder.HasOne(x => x.Company)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.CompanyId);
 
-         }
+        }
     }
 }

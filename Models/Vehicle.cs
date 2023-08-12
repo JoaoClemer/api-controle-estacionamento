@@ -9,7 +9,7 @@
         public string Color { get; set; }
         public DateTime EntryTime { get; set; }
         public DateTime ExitTime { get; set; }
-        public virtual Parking Parking { get; set; }
+        public  Parking Parking { get; set; }
         public int ParkingId { get; set; }
     }
 }

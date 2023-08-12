@@ -11,8 +11,8 @@ namespace ControleDeEstacionamento.Models
         public UserRole Role { get; set; }
 
         public bool IsActive { get; set; }
-        //public virtual Company Company { get; set; }
-        //public int CompanyId { get; set; }
+        public  Company Company { get; set; }
+        public int CompanyId { get; set; }
     }
     public enum UserRole
     {

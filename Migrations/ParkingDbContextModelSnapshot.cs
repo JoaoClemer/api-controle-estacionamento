@@ -61,7 +61,7 @@ namespace ControleDeEstacionamento.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsActive")
@@ -149,9 +149,13 @@ namespace ControleDeEstacionamento.Migrations
 
             modelBuilder.Entity("ControleDeEstacionamento.Models.User", b =>
                 {
-                    b.HasOne("ControleDeEstacionamento.Models.Company", null)
+                    b.HasOne("ControleDeEstacionamento.Models.Company", "Company")
                         .WithMany("Users")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("ControleDeEstacionamento.Models.Vehicle", b =>
