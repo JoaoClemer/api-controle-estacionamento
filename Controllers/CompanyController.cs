@@ -117,7 +117,7 @@ namespace ControleDeEstacionamento.Controllers
                 await context.SaveChangesAsync();
                 return Ok(new ResultModel<Company>(company));
             }
-            catch (Exception ex) { 
+            catch{ 
                 return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
