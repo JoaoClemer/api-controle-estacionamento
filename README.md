@@ -2,9 +2,9 @@
 
 Para geração do token de autenticação, segue os usuários já cadastrados:
 
-Esse tem a permisão de Admin, que autoriza ele:
--Atualizar dados dos usuários (PUT)
--Deletar usuários(DELETE)
+Esse tem a permisão de Admin, que autoriza ele:<br>
+-Atualizar dados dos usuários (PUT)<br>
+-Deletar usuários(DELETE)<br>
 -Ativar ou desativar usuários(PATCH)
 
 {
@@ -12,7 +12,7 @@ Esse tem a permisão de Admin, que autoriza ele:
   "passwordHash": "123"
 }
 
-Esse tem a permisão de VehicleRegister, que autoriza ele:
+Esse tem a permisão de VehicleRegister, que autoriza ele:<br>
 -Registrar novos carros no estacionamento (POST)
 
 {
