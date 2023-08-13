@@ -140,6 +140,32 @@ namespace ControleDeEstacionamento.Controllers
             }
         }
 
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> ActiveOrDesativeUser(
+            [FromBody] PatchUserModel model,
+            [FromServices] ParkingDbContext context,
+            [FromRoute] int id
+            )
+        {
+            try
+            {
+                var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+                if (user == null)
+                    return NotFound(new ResultModel<string>("This user does not exist!"));
+
+                user.IsActive = model.IsActive;
+                context.Update(user);
+                await context.SaveChangesAsync();
+
+                return Ok(new ResultModel<User>(user));
+            
+            }catch
+            {
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
+            }
+
+        }
+
     }
 
     
