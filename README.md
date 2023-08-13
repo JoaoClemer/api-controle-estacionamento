@@ -3,23 +3,23 @@
 Para geração do token de autenticação, segue os usuários já cadastrados:
 
 Esse tem a permisão de Admin, que autoriza ele:<br>
--Atualizar dados dos usuários (PUT)<br>
--Deletar usuários(DELETE)<br>
--Ativar ou desativar usuários(PATCH)
-
+- Atualizar dados dos usuários (PUT)<br>
+- Deletar usuários(DELETE)<br>
+- Ativar ou desativar usuários(PATCH)
+```
 {
   "username": "joaoclemer",
   "passwordHash": "123"
 }
-
+```
 Esse tem a permisão de VehicleRegister, que autoriza ele:<br>
--Registrar novos carros no estacionamento (POST)
-
+- Registrar novos carros no estacionamento (POST)
+```
 {
   "username": "clemercarvalho",
   "passwordHash": "123"
 }
-
+```
 Gere o token através do End Point Account:
 ![Account](https://github.com/JoaoClemer/api-controle-estacionamento/assets/56324622/c904d9c6-6b74-415f-adf8-cb12c75a31f2)
 ![Token](https://github.com/JoaoClemer/api-controle-estacionamento/assets/56324622/d4b7e644-b1b3-4d3e-8ec8-01e28e7ecfa4)
