@@ -2,8 +2,10 @@
 using ControleDeEstacionamento.Extensions;
 using ControleDeEstacionamento.Models;
 using ControleDeEstacionamento.ModelView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ControleDeEstacionamento.Controllers
 {
@@ -11,7 +13,7 @@ namespace ControleDeEstacionamento.Controllers
     [Route("v1/[controller]")]
     public class VehicleController : ControllerBase
     {
-        [HttpGet("")]
+        [HttpGet]
         public async Task<IActionResult> GetVehiclesAsync(
             [FromServices] ParkingDbContext context)
         {
@@ -27,7 +29,6 @@ namespace ControleDeEstacionamento.Controllers
             {
                 return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
-
         }
 
         [HttpGet("{id:int}")]
@@ -37,10 +38,10 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var vehicles = await context.Vehicles.AsNoTracking().Include(x=> x.Parking).FirstOrDefaultAsync(x => x.Id == id);
+                var vehicles = await context.Vehicles.AsNoTracking().Include(x => x.Parking).FirstOrDefaultAsync(x => x.Id == id);
                 if (vehicles == null)
                     return NotFound(new ResultModel<string>("This vehicle does not exist!"));
-                
+
                 return Ok(new ResultModel<Vehicle>(vehicles));
             }
             catch (Exception)
@@ -48,7 +49,9 @@ namespace ControleDeEstacionamento.Controllers
                 return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
-        [HttpPost("")]
+        
+        [Authorize(Roles = "VehicleRegister")]
+        [HttpPost]
         public async Task<IActionResult> PostVehicleAsync(
             [FromServices] ParkingDbContext context,
             [FromBody] VehicleModel model)
@@ -57,13 +60,12 @@ namespace ControleDeEstacionamento.Controllers
                 return BadRequest(new ResultModel<Vehicle>(ModelState.GetErrors()));
             try
             {
-
-                var parking = context.Parkings.FirstOrDefault(x => x.Id == model.ParkingId);
+                var parking = context.Parkings.AsNoTracking().Include(x => x.Vehicles).FirstOrDefault(x => x.Id == model.ParkingId);
                 if (parking == null)
                     return NotFound(new ResultModel<string>("No parking found with the given id"));
-                
-                //if (parking.Vehicles.Count() >= parking.TotalParkingSpots)
-                //    return BadRequest("O estacionamento está lotado");
+
+                if (parking.Vehicles.Count() >= parking.TotalParkingSpots)
+                    return BadRequest("The parking lot is full.");
 
                 var plate = context.Vehicles.FirstOrDefault(x => x.LicensePlate == model.LicensePlate);
                 if (plate != null)
@@ -77,19 +79,18 @@ namespace ControleDeEstacionamento.Controllers
                     Color = model.Color,
                     EntryTime = DateTime.Now,
                     ParkingId = model.ParkingId
-
                 };
                 await context.Vehicles.AddAsync(newVehicle);
                 await context.SaveChangesAsync();
 
-                return Created($"{newVehicle.Id}",new ResultModel<Vehicle>(newVehicle));
+                return Created($"{newVehicle.Id}", new ResultModel<Vehicle>(newVehicle));
             }
             catch
             {
                 return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
-
         }
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutVehicleAsync(
             [FromServices] ParkingDbContext context,
@@ -118,13 +119,11 @@ namespace ControleDeEstacionamento.Controllers
                 await context.SaveChangesAsync();
 
                 return Ok(new ResultModel<Vehicle>(vehicle));
-
             }
             catch
             {
                 return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
-
         }
 
         [HttpDelete("{id:int}")]
@@ -152,6 +151,6 @@ namespace ControleDeEstacionamento.Controllers
             }
 
         }
-     
+
     }
 }

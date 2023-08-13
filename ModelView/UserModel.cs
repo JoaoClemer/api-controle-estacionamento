@@ -1,4 +1,6 @@
 ﻿
+using ControleDeEstacionamento.Models;
+
 namespace ControleDeEstacionamento.ModelView
 {
     public class UserModel
@@ -7,6 +9,7 @@ namespace ControleDeEstacionamento.ModelView
         public string Username { get; set; }
         public string PasswordHash { get; set; }
         public int CompanyId { get; set; }
+        public UserRole Role { get; set; }
 
     }
 }

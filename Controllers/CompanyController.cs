@@ -11,7 +11,7 @@ namespace ControleDeEstacionamento.Controllers
     [Route("v1/[controller]")]
     public class CompanyController : ControllerBase
     {
-        [HttpGet("")]
+        [HttpGet]
         public async Task<IActionResult> GetCompaniesAsync([FromServices] ParkingDbContext context)
         {
             try
@@ -48,7 +48,7 @@ namespace ControleDeEstacionamento.Controllers
             }
         }
 
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> PostCompanyAsync(
             [FromServices]ParkingDbContext context,
             [FromBody] CompanyModel model)

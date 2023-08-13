@@ -13,14 +13,14 @@ namespace ControleDeEstacionamento.Controllers
     [Route("v1/[controller]")]
     public class UserController : ControllerBase
     {
-        [HttpGet("")]
+        [HttpGet]
         public async Task<IActionResult> GetUsersAsync(
             [FromServices] ParkingDbContext context) 
         {
             try
             {
                 
-                var users = await context.Users.AsNoTracking().ToListAsync();
+                var users = await context.Users.AsNoTracking().Where(x=> x.IsActive == true).ToListAsync();
 
                 if(users.Count == 0)
                     return NotFound(new ResultModel<string>("We have no registered users!"));  
@@ -52,7 +52,7 @@ namespace ControleDeEstacionamento.Controllers
             }
         }
 
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> PostUserAsync(
             [FromServices] ParkingDbContext context,
             [FromBody] UserModel model)
@@ -70,7 +70,7 @@ namespace ControleDeEstacionamento.Controllers
                     Name = model.Name,
                     Username = model.Username,
                     PasswordHash = model.PasswordHash,
-                    Role = UserRole.VehicleRegister,
+                    Role = model.Role,
                     CompanyId = model.CompanyId,
                     IsActive = true
 
@@ -87,6 +87,7 @@ namespace ControleDeEstacionamento.Controllers
             
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutUserAsync(
             [FromServices] ParkingDbContext context,
@@ -117,6 +118,7 @@ namespace ControleDeEstacionamento.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteUserAsync(
             [FromServices] ParkingDbContext context,
@@ -140,6 +142,7 @@ namespace ControleDeEstacionamento.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> ActiveOrDesativeUser(
             [FromBody] PatchUserModel model,

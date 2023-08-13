@@ -15,14 +15,13 @@ namespace ControleDeEstacionamento.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.Name, value: "joaoclemer"),
-                    new Claim(ClaimTypes.Role, value: UserRole.Admin.ToString()),
-                    new Claim(ClaimTypes.Name, value: "teste"),
-                    new Claim(ClaimTypes.Role, value : UserRole.VehicleRegister.ToString())
+                    new Claim(ClaimTypes.Name, value: user.Username),
+                    new Claim(ClaimTypes.Role, value: user.Role.ToString()),
+
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
+                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
 

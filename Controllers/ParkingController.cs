@@ -11,7 +11,7 @@ namespace ControleDeEstacionamento.Controllers
     [Route("v1/[controller]")]
     public class ParkingController : ControllerBase
     {
-        [HttpGet("")]
+        [HttpGet]
         public async Task<IActionResult> GetParkingsAsync(
             [FromServices] ParkingDbContext context)
         {
@@ -25,8 +25,7 @@ namespace ControleDeEstacionamento.Controllers
 
             }catch
             {
-                return StatusCode(500, new ResultModel<string>("Internal server failure!")
-);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
 
@@ -50,7 +49,7 @@ namespace ControleDeEstacionamento.Controllers
             }
         }
 
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> PostParkingAsync(
             [FromServices] ParkingDbContext context,
             [FromBody] ParkingModel model)
@@ -91,7 +90,6 @@ namespace ControleDeEstacionamento.Controllers
                 return BadRequest(new ResultModel<Parking>(ModelState.GetErrors()));
             try
             {
-
                 var parkings = await context.Parkings.FirstOrDefaultAsync(x => x.Id == id);
                 if (parkings == null)
                     return NotFound(new ResultModel<string>("This parking does not exist!"));
@@ -102,7 +100,6 @@ namespace ControleDeEstacionamento.Controllers
                 await context.SaveChangesAsync();
 
                 return Ok(new ResultModel<Parking>(parkings));
-
             }
             catch
             {
