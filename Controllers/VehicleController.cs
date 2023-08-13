@@ -1,4 +1,5 @@
 ﻿using ControleDeEstacionamento.Data;
+using ControleDeEstacionamento.Extensions;
 using ControleDeEstacionamento.Models;
 using ControleDeEstacionamento.ModelView;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,15 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var vehicles = await context.Vehicles.ToListAsync();
+                var vehicles = await context.Vehicles.AsNoTracking().ToListAsync();
                 if (vehicles.Count == 0)
-                    return NotFound("Não temos veiculos registrados");
+                    return NotFound(new ResultModel<string>("We have no registered vehicles!"));
 
-                return Ok(vehicles);
+                return Ok(new ResultModel<List<Vehicle>>(vehicles));
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
 
         }
@@ -36,14 +37,15 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var vehicles = await context.Vehicles.FirstOrDefaultAsync(x => x.Id == id);
+                var vehicles = await context.Vehicles.AsNoTracking().Include(x=> x.Parking).FirstOrDefaultAsync(x => x.Id == id);
                 if (vehicles == null)
-                    return NotFound("Veiculo não encontrado");
-                return Ok(vehicles);
+                    return NotFound(new ResultModel<string>("This vehicle does not exist!"));
+                
+                return Ok(new ResultModel<Vehicle>(vehicles));
             }
             catch (Exception)
             {
-                return StatusCode(500, "Falha ao buscar veiculos");
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
         [HttpPost("")]
@@ -51,15 +53,21 @@ namespace ControleDeEstacionamento.Controllers
             [FromServices] ParkingDbContext context,
             [FromBody] VehicleModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultModel<Vehicle>(ModelState.GetErrors()));
             try
             {
-                var company = context.Companies.FirstOrDefault(x => x.Id == model.ParkingId);
-                if (company == null)
-                    return NotFound("Nenhum estacionamento encontrado com o Id informado");
+
+                var parking = context.Parkings.FirstOrDefault(x => x.Id == model.ParkingId);
+                if (parking == null)
+                    return NotFound(new ResultModel<string>("No parking found with the given id"));
+                
+                //if (parking.Vehicles.Count() >= parking.TotalParkingSpots)
+                //    return BadRequest("O estacionamento está lotado");
 
                 var plate = context.Vehicles.FirstOrDefault(x => x.LicensePlate == model.LicensePlate);
                 if (plate != null)
-                    return BadRequest("Já existe um veiculo registrado com essa placa");
+                    return BadRequest(new ResultModel<string>("There is already a vehicle registered with this license plate."));
 
                 var newVehicle = new Vehicle
                 {
@@ -70,16 +78,15 @@ namespace ControleDeEstacionamento.Controllers
                     EntryTime = DateTime.Now,
                     ParkingId = model.ParkingId
 
-
                 };
                 await context.Vehicles.AddAsync(newVehicle);
                 await context.SaveChangesAsync();
 
-                return Created($"{newVehicle.Id}", newVehicle);
+                return Created($"{newVehicle.Id}",new ResultModel<Vehicle>(newVehicle));
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, ex);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
 
         }
@@ -89,31 +96,33 @@ namespace ControleDeEstacionamento.Controllers
             [FromBody] EditVehicleModel model,
             [FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultModel<Vehicle>(ModelState.GetErrors()));
             try
             {
                 var vehicle = await context.Vehicles.FirstOrDefaultAsync(x => x.Id == id);
                 if (vehicle == null)
-                    return NotFound("Veiculo não encontrado");
+                    return NotFound(new ResultModel<string>("This vehicle does not exist!"));
 
                 var plate = context.Vehicles.FirstOrDefault(x => x.LicensePlate == model.LicensePlate);
                 if (plate != null)
-                    return BadRequest("Já existe um veiculo registrado com essa placa");
+                    return BadRequest(new ResultModel<string>("There is already a vehicle registered with this license plate."));
 
                 vehicle.LicensePlate = model.LicensePlate;
                 vehicle.Year = model.Year;
                 vehicle.Model = model.Model;
                 vehicle.Color = model.Color;
-                
+
 
                 context.Vehicles.Update(vehicle);
                 await context.SaveChangesAsync();
 
-                return Ok(vehicle);
+                return Ok(new ResultModel<Vehicle>(vehicle));
 
             }
-            catch (Exception)
+            catch
             {
-                return StatusCode(500, "Não foi possível atualizar os dados do veiculo");
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
 
         }
@@ -125,23 +134,24 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-               var vehicle = await context.Vehicles.FirstOrDefaultAsync(x => x.Id == id);
-                if (vehicle == null) 
-                    return NotFound("Veiculo não encontrado");
+                var vehicle = await context.Vehicles.FirstOrDefaultAsync(x => x.Id == id);
+                if (vehicle == null)
+                    return NotFound(new ResultModel<string>("This vehicle does not exist!"));
 
                 vehicle.ExitTime = DateTime.Now;
                 context.Vehicles.Update(vehicle);
-                
+
                 context.Vehicles.Remove(vehicle);
                 await context.SaveChangesAsync();
 
-                return Ok(vehicle);
+                return Ok(new ResultModel<Vehicle>(vehicle));
             }
             catch (Exception)
             {
-                return StatusCode(500, "Não foi possível deletar o veiculo");
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
 
         }
+     
     }
 }

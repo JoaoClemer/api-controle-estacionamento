@@ -1,12 +1,12 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace ControleDeEstacionamento.ModelView
 {
-    public class UserModel
+    public class EditUserModel
     {
+        
         public string Name { get; set; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }
-        public int CompanyId { get; set; }
-
     }
 }

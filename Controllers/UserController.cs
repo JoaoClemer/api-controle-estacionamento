@@ -1,4 +1,5 @@
 ﻿using ControleDeEstacionamento.Data;
+using ControleDeEstacionamento.Extensions;
 using ControleDeEstacionamento.Models;
 using ControleDeEstacionamento.ModelView;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,15 @@ namespace ControleDeEstacionamento.Controllers
             try
             {
                 
-                var users = await context.Users.AsNoTracking().Include(x => x.Company).ToListAsync();
+                var users = await context.Users.AsNoTracking().ToListAsync();
 
                 if(users.Count == 0)
-                    return NotFound("Não temos usuários registrados");  
+                    return NotFound(new ResultModel<string>("We have no registered users!"));  
 
-                return Ok(users);
-            }catch (Exception ex)
+                return Ok(new ResultModel<List<User>>(users));
+            }catch
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
 
         }
@@ -37,14 +38,15 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+                var user = await context.Users.AsNoTracking().Include(x => x.Company).FirstOrDefaultAsync(x => x.Id == id);
                 if(user == null)
-                    return NotFound("Usuário não encontrado");
-                return Ok(user);
+                    return NotFound(new ResultModel<string>("This user does not exist!"));
+                
+                return Ok(new ResultModel<User>(user));
             }
             catch(Exception)
             {
-                return StatusCode(500, "Falha ao buscar usuários");
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
 
@@ -53,11 +55,13 @@ namespace ControleDeEstacionamento.Controllers
             [FromServices] ParkingDbContext context,
             [FromBody] UserModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultModel<User>(ModelState.GetErrors()));
             try
             {
                 var company = context.Companies.FirstOrDefault(x => x.Id == model.CompanyId);
                 if (company == null)
-                    return NotFound("Nenhuma empresa encontrada com o Id informado");
+                    return NotFound(new ResultModel<string>("No company found with the given id"));
 
                 var newUser = new User
                 {
@@ -72,11 +76,11 @@ namespace ControleDeEstacionamento.Controllers
                 await context.Users.AddAsync(newUser);
                 await context.SaveChangesAsync();
 
-                return Created($"{newUser.Id}", newUser);
+                return Created($"{newUser.Id}", new ResultModel<User>(newUser));
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, ex);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
             
         }
@@ -84,27 +88,30 @@ namespace ControleDeEstacionamento.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutUserAsync(
             [FromServices] ParkingDbContext context,
-            [FromBody] User user,
+            [FromBody] EditUserModel user,
             [FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultModel<User>(ModelState.GetErrors()));
             try
             {
                 var users = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (users == null)
-                    return NotFound("Usuário não encontrado");
+                    return NotFound(new ResultModel<string>("This user does not exist!"));
 
                 users.Name = user.Name;
                 users.Username = user.Username;
-                users.Role = user.Role;
-                users.IsActive = user.IsActive;
+                users.PasswordHash = user.PasswordHash;
+               
             
                 context.Users.Update(users);
                 await context.SaveChangesAsync();
 
-                return Ok(users);
+                return Ok(new ResultModel<User>(users));
             
             }catch (Exception) {
-                return StatusCode(500, "Não foi possível atualizar os dados do usuário");
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
+;
             }
         }
 
@@ -118,16 +125,20 @@ namespace ControleDeEstacionamento.Controllers
             {
                 var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
-                    return NotFound("Usuário não encontrado");
+                    return NotFound(new ResultModel<string>("This user does not exist!"));
+                
                 context.Users.Remove(user);
                 await context.SaveChangesAsync();
 
-                return Ok(user);
+                return Ok(new ResultModel<User>(user));
             }
-            catch (Exception)
+            catch
             {
-                return StatusCode(500, "Não foi possível deletar o usuário");
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
+
     }
+
+    
 }

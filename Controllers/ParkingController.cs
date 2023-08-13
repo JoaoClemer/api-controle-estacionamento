@@ -1,4 +1,5 @@
 ﻿using ControleDeEstacionamento.Data;
+using ControleDeEstacionamento.Extensions;
 using ControleDeEstacionamento.Models;
 using ControleDeEstacionamento.ModelView;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,16 @@ namespace ControleDeEstacionamento.Controllers
         {
             try
             {
-                var parkings = await context.Parkings.AsNoTracking().Include(x=> x.Company).Include(x=> x.Vehicles).ToListAsync();
+                var parkings = await context.Parkings.AsNoTracking().ToListAsync();
                 if (parkings.Count == 0)
-                    return NotFound("Não temos parkings registrados");
+                    return NotFound(new ResultModel<string>("We have no registered parkings!"));
 
-                return Ok(parkings);
+                return Ok(new ResultModel<List<Parking>>(parkings));
 
-            }catch (Exception ex)
+            }catch
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!")
+);
             }
         }
 
@@ -37,12 +39,14 @@ namespace ControleDeEstacionamento.Controllers
             {
                 var parking = await context.Parkings.AsNoTracking().Include(x => x.Company).Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id);
                 if (parking == null)
-                    return NotFound("Parking não encontrado");
+                    return NotFound(new ResultModel<string>("This parking does not exist!"));
 
-                return Ok(parking);
-            }catch(Exception ex) 
+                return Ok(new ResultModel<Parking>(parking));
+            }
+
+            catch
             {
-                    return StatusCode(500, ex.Message);
+                    return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
 
@@ -51,11 +55,13 @@ namespace ControleDeEstacionamento.Controllers
             [FromServices] ParkingDbContext context,
             [FromBody] ParkingModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultModel<Parking>(ModelState.GetErrors()));
             try
             {
                 var company = context.Companies.FirstOrDefault(x => x.Id == model.CompanyId);
                 if (company == null)
-                    return NotFound("Nenhuma empresa encontrada com o Id informado");
+                    return NotFound(new ResultModel<string>("No company found with the given id"));
 
                 var newParking = new Parking
                 {
@@ -65,11 +71,12 @@ namespace ControleDeEstacionamento.Controllers
                 await context.Parkings.AddAsync(newParking);
                 await context.SaveChangesAsync();
 
-                return Created($"/{newParking.Id}", newParking);
+                return Created($"/{newParking.Id}", new ResultModel<Parking>(newParking));
 
-            }catch(Exception ex)
-            {
-                return StatusCode(500, ex.Message);
+            }
+            catch 
+            { 
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
 
         }
@@ -77,25 +84,29 @@ namespace ControleDeEstacionamento.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutParkingAsync(
             [FromServices] ParkingDbContext context,
-            [FromBody] ParkingModel model,
+            [FromBody] EditParkingModel model,
             [FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultModel<Parking>(ModelState.GetErrors()));
             try
             {
+
                 var parkings = await context.Parkings.FirstOrDefaultAsync(x => x.Id == id);
                 if (parkings == null)
-                    return NotFound("Parking não encontrado");
+                    return NotFound(new ResultModel<string>("This parking does not exist!"));
 
                 parkings.TotalParkingSpots = model.TotalParkingSpots;
 
                 context.Parkings.Update(parkings);
                 await context.SaveChangesAsync();
-                return Ok(parkings);
+
+                return Ok(new ResultModel<Parking>(parkings));
 
             }
-            catch(Exception ex) 
+            catch
             {
-                return StatusCode(500, ex);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
 
@@ -108,15 +119,15 @@ namespace ControleDeEstacionamento.Controllers
             {
                 var parking = await context.Parkings.FirstOrDefaultAsync(x => x.Id == id);
                 if (parking == null)
-                    return BadRequest("Empresa não encontrada");
+                    return BadRequest(new ResultModel<string>("This parking does not exist!"));
 
                 context.Parkings.Remove(parking);
                 await context.SaveChangesAsync();
-                return Ok(parking);
+                return Ok(new ResultModel<Parking>(parking));
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, ex);
+                return StatusCode(500, new ResultModel<string>("Internal server failure!"));
             }
         }
 
